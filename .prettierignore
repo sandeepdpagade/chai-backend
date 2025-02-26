@@ -1,0 +1,40 @@
+# Ignore node_modules
+node_modules
+
+# Ignore build output
+dist
+build
+
+# Ignore environment files
+*.env
+.env
+.env.local
+.env.production
+.env.development
+.env.*
+
+
+# Ignore logs and cache
+logs
+*.log
+.cache
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore specific file types
+*.min.js
+*.min.css
+
+# Ignore Next.js and Nuxt.js cache
+.next
+.nuxt
+
+# Ignore public and coverage directories
+public
+coverage
+
+# Ignore specific files
+README.md
