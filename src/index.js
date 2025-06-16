@@ -3,6 +3,7 @@ import dotenv from 'dotenv'; // This is needed if you are using ES6 modules
 
 import mongoose from 'mongoose';
 import connectDB from './db/index.js';
+import { app } from './app.js';
 
 dotenv.config();
 
