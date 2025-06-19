@@ -5,16 +5,17 @@ import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, username, password } = req.body;
+  const { fullname, email, username, password } = req.body;
   console.log('email:', email);
+  console.log(req.files);
 
   if (
-    [fullName, email, username, password].some((field) => field?.trim() === '')
+    [fullname, email, username, password].some((field) => field?.trim() === '')
   ) {
     throw new ApiError(400, 'All fields are required');
   }
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ email }, { username }],
   });
 
@@ -23,26 +24,28 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverimage[0]?.path;
+  const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
-  if (!avatarLocalPath) {
-    throw new ApiError(400, 'Avatar and cover image are required');
-  }
+  // if (!avatarLocalPath) {
+  //   throw new ApiError(400, 'Avatar image is required');
+  // }
+
+  console.log('avatarLocalPath:', avatarLocalPath);
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-
-  if (!avatar) {
-    throw new ApiError(500, 'Failed to upload avatar image');
-  }
+console.log('avatar:', avatar);
+  // if (!avatar) {
+  //   throw new ApiError(500, 'Failed to upload avatar image');
+  // }
 
   const user = await User.create({
-    username: username.toLowerCase(),
+    username,
     password,
-    email: email.toLowerCase(),
-    fullname: fullName,
-    avatar: avatar.url,
-    coverimage: coverImage || '',
+    email,
+    fullname,
+    avatar: avatar?.url || "",
+    coverimage: coverImage?.url || '',
   });
 
   const createdUser = await User.findById(user._id).select(

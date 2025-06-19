@@ -3,14 +3,14 @@
 const asyncHandler = (requestHandler) => {
   return (req, res, next) => {
     Promise.resolve(requestHandler(req, res, next)).catch((err) => {
-      res.status(err.code || 500).json({
+      // Change err.code to err.statusCode
+      res.status(err.statusCode || 500).json({
         success: false,
-        message: err.message,
+        message: err.message || 'Internal Server Error', // Added fallback for message too
       });
     });
   };
 };
-
 
 export { asyncHandler };
 
