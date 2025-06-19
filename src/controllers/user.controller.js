@@ -22,29 +22,33 @@ const registerUser = asyncHandler(async (req, res) => {
   if (existedUser) {
     throw new ApiError(400, 'User already exists');
   }
+  console.log('req.files:', req.files);
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  const coverImageLocalPath =
+    Array.isArray(req.files?.coverImage) && req.files.coverImage.length > 0
+      ? req.files.coverImage[0].path
+      : null;
 
-  // if (!avatarLocalPath) {
-  //   throw new ApiError(400, 'Avatar image is required');
-  // }
+  if (!avatarLocalPath) {
+    throw new ApiError(400, 'Avatar image is required');
+  }
 
   console.log('avatarLocalPath:', avatarLocalPath);
 
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-console.log('avatar:', avatar);
-  // if (!avatar) {
-  //   throw new ApiError(500, 'Failed to upload avatar image');
-  // }
+  console.log('avatar:', avatar);
+  if (!avatar) {
+    throw new ApiError(500, 'Failed to upload avatar image');
+  }
 
   const user = await User.create({
     username,
     password,
     email,
     fullname,
-    avatar: avatar?.url || "",
+    avatar: avatar?.url || '',
     coverimage: coverImage?.url || '',
   });
 

@@ -1,5 +1,5 @@
 // require('dotenv').config(); This is not needed if you are using ES6 modules
-import dotenv from 'dotenv'; // This is needed if you are using ES6 modules
+import dotenv from 'dotenv'; 
 
 import mongoose from 'mongoose';
 import connectDB from './db/index.js';
